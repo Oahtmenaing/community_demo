@@ -6,8 +6,11 @@
     <sql id="discuss_post_field">
         id, user_id, title, content, type, status, create_time, comment_count, score
     </sql>
+    <sql id="insert_field">
+        user_id, title, content, type, status, create_time, comment_count, score
+    </sql>
     <select id="select_discuss_post" resultType="DiscussPost">
-        select <include refid="discuss_post_field"></include> from discuss_post
+        select <include refid="discuss_post_field"/> from discuss_post
         where status != 2
         <if test="userId!=0">
             and user_id = #{userId}
@@ -23,4 +26,17 @@
             and user_id = #{userId}
         </if>
     </select>
+
+    <insert id="insert_discuss_post" parameterType="DiscussPost">
+        insert into discuss_post(<include refid="insert_field"/>) values(#{userId}, #{title}, #{content}, #{type}, #{status}, #{createTime}, #{comment_count}, #{score})
+    </insert>
+
+    <select id="selectById" resultType="DiscussPost">
+        select <include refid="discuss_post_field"/> from discuss_post where id = #{userId}
+    </select>
+
+    <update id="updateCommentCount">
+        update discuss_post set comment_count=#{count} where id=#{id}
+    </update>
+
 </mapper>
