@@ -1,6 +1,7 @@
 package com.my_web.community.community_demo.controller;
 
 
+import com.my_web.community.community_demo.Annotation.LoginRequired;
 import com.my_web.community.community_demo.DAO.Message_Mapper;
 import com.my_web.community.community_demo.DAO.User_Mapper;
 import com.my_web.community.community_demo.entity.Message;
@@ -31,6 +32,7 @@ public class Message_controller {
     @Autowired
     User_service user_service;
 
+    @LoginRequired
     @RequestMapping(path = "/letter/list", method = RequestMethod.GET)
     public String getLetterList(Model model, Page page) {
         User user = hostholder.getUser();
@@ -63,6 +65,7 @@ public class Message_controller {
         return "/site/letter";
     }
 
+    @LoginRequired
     @RequestMapping(path = "/letter/detail/{conversationId}", method = RequestMethod.GET)
     public String getLetterDetail(@PathVariable("conversationId") String conversationId, Page page, Model model) {
         page.setLimit(5);
@@ -82,6 +85,7 @@ public class Message_controller {
         model.addAttribute("letters", letters);
         model.addAttribute("targetUser", getTarget(conversationId));
 
+        //将消息设为已读
         List<Integer> ids = GetUnreadLetters(letterList);
         if (!ids.isEmpty()) {
             message_service.readMessage(ids);
@@ -113,6 +117,7 @@ public class Message_controller {
         }
     }
 
+    @LoginRequired
     @RequestMapping(path = "/letter/send", method = RequestMethod.POST)
     @ResponseBody
     public String sendLetter(String toName, String content) {
@@ -132,6 +137,18 @@ public class Message_controller {
         message.setContent(content);
         message.setCreateTime(new Date());
         message_service.addMessage(message);
+        return CommunityUtil.getJSONString(0);
+    }
+
+    @LoginRequired
+    @RequestMapping(path = "/letter/delete", method = RequestMethod.POST)
+    @ResponseBody
+    public String deleteMessage(String id) {
+        if (id != null) {
+            List<Integer> ids = new ArrayList<>();
+            ids.add(Integer.parseInt(id));
+            message_service.deleteMessage(ids);
+        }
         return CommunityUtil.getJSONString(0);
     }
 }

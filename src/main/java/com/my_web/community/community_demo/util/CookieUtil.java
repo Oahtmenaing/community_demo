@@ -13,7 +13,7 @@ public class CookieUtil {
 
         Cookie[] cookies = request.getCookies();
         if (cookies == null){
-            throw new IllegalArgumentException("不包含Cookie");
+            System.out.println("Cookie为空");
         }else{
             for (Cookie cookie: cookies){
                 if (cookie.getName().equals(name)){
