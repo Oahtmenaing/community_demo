@@ -1,14 +1,10 @@
 package com.my_web.community.community_demo;
 import com.my_web.community.community_demo.util.MailClient;
-import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
-
-import java.util.Date;
-import java.util.List;
 
 @SpringBootTest
 @ContextConfiguration(classes = CommunityDemoApplication.class)

@@ -4,7 +4,10 @@ import com.my_web.community.community_demo.entity.DiscussPost;
 import com.my_web.community.community_demo.entity.Page;
 import com.my_web.community.community_demo.entity.User;
 import com.my_web.community.community_demo.service.Discuss_post_service;
+import com.my_web.community.community_demo.service.LikeService;
 import com.my_web.community.community_demo.service.User_service;
+import com.my_web.community.community_demo.util.CommunityUtil;
+import com.my_web.community.community_demo.util.Community_Constant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,11 +20,13 @@ import java.util.List;
 import java.util.Map;
 
 @Controller
-public class main_page {
+public class main_page implements Community_Constant {
     @Autowired
     private Discuss_post_service discuss_post_service;
     @Autowired
     private User_service user_service;
+    @Autowired
+    LikeService likeService;
 
     @RequestMapping(path = "/main", method = RequestMethod.GET)
     public String select_discuss_post_controller(Model model, Page page) {
@@ -34,6 +39,10 @@ public class main_page {
             map.put("post", post);
             User user = user_service.selectById_service(post.getUserId());
             map.put("user", user);
+
+            long likeCount = likeService.findEntityLikeCount(ENTITY_TYPE_POST, post.getId());
+            map.put("likeCount", likeCount);
+
             post_user_list.add(map);
         }
         model.addAttribute("post_user_list", post_user_list);

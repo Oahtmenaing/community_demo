@@ -1,7 +1,6 @@
 package com.my_web.community.community_demo.controller.interceptor;
 
 import com.my_web.community.community_demo.Annotation.LoginRequired;
-import com.my_web.community.community_demo.entity.User;
 import com.my_web.community.community_demo.util.Hostholder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

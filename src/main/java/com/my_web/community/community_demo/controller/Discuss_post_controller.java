@@ -7,12 +7,12 @@ import com.my_web.community.community_demo.entity.Page;
 import com.my_web.community.community_demo.entity.User;
 import com.my_web.community.community_demo.service.Comment_service;
 import com.my_web.community.community_demo.service.Discuss_post_service;
+import com.my_web.community.community_demo.service.LikeService;
 import com.my_web.community.community_demo.service.User_service;
 import com.my_web.community.community_demo.util.CommunityUtil;
 import com.my_web.community.community_demo.util.Community_Constant;
 import com.my_web.community.community_demo.util.Hostholder;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.Banner;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -31,6 +31,9 @@ public class Discuss_post_controller implements Community_Constant {
 
     @Autowired
     private Hostholder hostholder;
+
+    @Autowired
+    private LikeService likeService;
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     @ResponseBody
@@ -66,6 +69,11 @@ public class Discuss_post_controller implements Community_Constant {
         model.addAttribute("post", post);
         model.addAttribute("user", user);
 
+        long likeCount = likeService.findEntityLikeCount(ENTITY_TYPE_POST, post.getId());
+        model.addAttribute("likeCount", likeCount);
+        int likeStatus = likeService.findEntityLikeStatus(hostholder.getUser().getId(), ENTITY_TYPE_POST, post.getId());
+        model.addAttribute("likeStatus", likeStatus);
+
         page.setLimit(5);
         page.setRows_num(post.getCommentCount());
         page.setPath("/discuss/detail/" + postId);
@@ -78,6 +86,8 @@ public class Discuss_post_controller implements Community_Constant {
                 Map<String, Object> commentView = new HashMap<>();
                 commentView.put("comment", comment);
                 commentView.put("user", user_service.selectById_service(comment.getUserId()));
+                commentView.put("likeCount", likeService.findEntityLikeCount(ENTITY_TYPE_COMMENT, comment.getId()));
+                commentView.put("likeStatus", likeService.findEntityLikeStatus(hostholder.getUser().getId(), ENTITY_TYPE_COMMENT, comment.getId()));
 
                 List<Comment> replyList = comment_service.selectByEntity(ENTITY_TYPE_COMMENT, comment.getId(), 0, Integer.MAX_VALUE);
                 List<Map<String, Object>> replyViewList = new ArrayList<>();
@@ -86,6 +96,8 @@ public class Discuss_post_controller implements Community_Constant {
                         Map<String, Object> replyView = new HashMap<>();
                         replyView.put("reply", reply);
                         replyView.put("user", user_service.selectById_service(reply.getUserId()));
+                        replyView.put("likeCount", likeService.findEntityLikeCount(ENTITY_TYPE_COMMENT, reply.getId()));
+                        replyView.put("likeStatus", likeService.findEntityLikeStatus(hostholder.getUser().getId(), ENTITY_TYPE_COMMENT, reply.getId()));
                         User target = reply.getTargetId() == 0 ? null: user_service.selectById_service(reply.getTargetId());
                         replyView.put("target", target);
 

@@ -4,7 +4,6 @@ import com.my_web.community.community_demo.entity.Comment;
 import com.my_web.community.community_demo.entity.User;
 import com.my_web.community.community_demo.service.Comment_service;
 import com.my_web.community.community_demo.util.Hostholder;
-import org.apache.ibatis.annotations.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;

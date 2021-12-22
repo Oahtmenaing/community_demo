@@ -2,7 +2,6 @@ package com.my_web.community.community_demo.controller.advice;
 
 
 import com.my_web.community.community_demo.util.CommunityUtil;
-import org.apache.coyote.Request;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -13,7 +12,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.net.http.HttpRequest;
 
 @ControllerAdvice(annotations = Controller.class)
 public class Exception_advice {

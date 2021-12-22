@@ -2,16 +2,13 @@ package com.my_web.community.community_demo.controller;
 
 
 import com.my_web.community.community_demo.Annotation.LoginRequired;
-import com.my_web.community.community_demo.DAO.User_Mapper;
 import com.my_web.community.community_demo.entity.User;
 import com.my_web.community.community_demo.service.User_service;
 import com.my_web.community.community_demo.util.CommunityUtil;
 import com.my_web.community.community_demo.util.Hostholder;
-import org.apache.ibatis.annotations.Param;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Required;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -25,7 +22,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.net.http.HttpResponse;
 
 @Controller
 @RequestMapping("/user")

@@ -1,12 +1,10 @@
 package com.my_web.community.community_demo.service;
 
 import com.my_web.community.community_demo.DAO.Discusspost_Mapper;
-import com.my_web.community.community_demo.DAO.User_Mapper;
 import com.my_web.community.community_demo.entity.DiscussPost;
 import com.my_web.community.community_demo.util.SensitiveFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.util.HtmlUtils;
 
 import java.util.List;

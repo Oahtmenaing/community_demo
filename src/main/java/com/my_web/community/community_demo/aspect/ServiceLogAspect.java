@@ -20,7 +20,7 @@ import java.util.Date;
 public class ServiceLogAspect {
     private static final Logger logger = LoggerFactory.getLogger(ServiceLogAspect.class);
 
-    @Pointcut("execution(* com.my_web.community_demo.service.*.*(..))")
+    @Pointcut("execution(* com.my_web.community.community_demo.service.*.*(..))")
     public void pointcut() {
 
     }

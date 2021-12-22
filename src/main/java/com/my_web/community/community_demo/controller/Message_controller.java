@@ -2,8 +2,6 @@ package com.my_web.community.community_demo.controller;
 
 
 import com.my_web.community.community_demo.Annotation.LoginRequired;
-import com.my_web.community.community_demo.DAO.Message_Mapper;
-import com.my_web.community.community_demo.DAO.User_Mapper;
 import com.my_web.community.community_demo.entity.Message;
 import com.my_web.community.community_demo.entity.Page;
 import com.my_web.community.community_demo.entity.User;
