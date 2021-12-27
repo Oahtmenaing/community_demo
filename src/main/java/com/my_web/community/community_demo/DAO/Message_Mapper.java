@@ -26,4 +26,12 @@ public interface Message_Mapper {
     int insertMessage(Message message);
 
     int updateStatus(List<Integer> ids, int status);
+
+    Message selectLatestNotice(int userId, String topic);
+
+    int selectNoticeCount(int userId, String topic);
+
+    int selectNoticeUnread(int userId, String topic);
+
+    List<Message> selectNotices(int userId, String topic, int offset, int limit);
 }

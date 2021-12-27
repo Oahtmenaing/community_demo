@@ -50,4 +50,20 @@ public class Message_service {
     public int deleteMessage(List<Integer> ids) {
         return message_mapper.updateStatus(ids, 2);
     }
+
+    public Message findLatestNotice(int userId, String topic) {
+        return message_mapper.selectLatestNotice(userId, topic);
+    }
+
+    public int countNotice(int userId, String topic) {
+        return message_mapper.selectNoticeCount(userId, topic);
+    }
+
+    public int countNoticeUnread(int userId, String topic) {
+        return message_mapper.selectNoticeUnread(userId, topic);
+    }
+
+    public List<Message> selectNotices(int userId, String topic, int offset, int limit) {
+        return message_mapper.selectNotices(userId, topic, offset, limit);
+    }
 }
