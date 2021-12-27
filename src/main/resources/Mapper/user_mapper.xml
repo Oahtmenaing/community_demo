@@ -39,8 +39,8 @@
         update user set activation_code = #{status} where id = #{id}
     </update>
 
-    <update id="updateHeader">
-        update user set header_url = #{header_url} where id = #{id}
+    <update id="updateHeaderUrl">
+        update user set header_url = #{headerUrl} where id = #{id}
     </update>
 
     <update id="updatePassword">

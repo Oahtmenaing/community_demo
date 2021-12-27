@@ -3,8 +3,11 @@ package com.my_web.community.community_demo.controller;
 
 import com.my_web.community.community_demo.Annotation.LoginRequired;
 import com.my_web.community.community_demo.entity.User;
+import com.my_web.community.community_demo.service.FollowService;
+import com.my_web.community.community_demo.service.LikeService;
 import com.my_web.community.community_demo.service.User_service;
 import com.my_web.community.community_demo.util.CommunityUtil;
+import com.my_web.community.community_demo.util.Community_Constant;
 import com.my_web.community.community_demo.util.Hostholder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,8 +28,11 @@ import java.io.OutputStream;
 
 @Controller
 @RequestMapping("/user")
-public class User_Controller {
+public class User_Controller implements Community_Constant {
     private Logger logger = LoggerFactory.getLogger(User_Controller.class);
+
+    @Autowired
+    LikeService likeService;
 
     @Autowired
     Hostholder hostholder;
@@ -127,5 +133,34 @@ public class User_Controller {
 
         user_service.updatePassword(user.getId(), communityUtil.MD5_Transer(password_new + user.getSalt()));
         return "redirect:/main";
+    }
+
+    @Autowired
+    FollowService followService;
+
+    @RequestMapping(path = "/profile/{userId}", method = RequestMethod.GET)
+    public String getProfilePage(@PathVariable("userId") int userId, Model model) {
+        User user = user_service.selectById_service(userId);
+        if (user == null) {
+            throw new RuntimeException("用户不存在");
+        }
+        model.addAttribute("user", user);
+        // 点赞
+        int likeCount = likeService.findUserLikeCount(userId);
+        model.addAttribute("likeCount", likeCount);
+        // 关注
+        long followeeCount = followService.findFolloweeCount(userId, ENTITY_TYPE_USER);
+        model.addAttribute("followeeCount", followeeCount);
+        // 粉丝
+        long followerCount = followService.findFollowerCount(ENTITY_TYPE_USER, userId);
+        model.addAttribute("followerCount", followerCount);
+        // 是否关注
+        boolean hasFollowed = false;
+        if (hostholder.getUser() != null) {
+            hasFollowed = followService.hasFollowed(hostholder.getUser().getId(), ENTITY_TYPE_USER, userId);
+        }
+        model.addAttribute("hasFollowed", hasFollowed);
+
+        return "/site/profile";
     }
 }

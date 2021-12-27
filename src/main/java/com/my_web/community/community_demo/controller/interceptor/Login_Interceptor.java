@@ -27,11 +27,14 @@ public class Login_Interceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String ticket = CookieUtil.get_value(request, "ticket");
-        if (ticket != null){
+        if (ticket != null) {
+            System.out.println();
             Login_ticket login_ticket = user_service.get_ticket_service(ticket);
-            if (login_ticket.getStatus() == 0 && login_ticket.getExpired().after(new Date()) && login_ticket != null){
-                User user = user_service.selectById_service(login_ticket.getUserId());
-                hostholder.setUser(user);
+            if (login_ticket != null){
+                if (login_ticket.getStatus() == 0 && login_ticket.getExpired().after(new Date())) {
+                    User user = user_service.selectById_service(login_ticket.getUserId());
+                    hostholder.setUser(user);
+                }
             }
         }
         return true;

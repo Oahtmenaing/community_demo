@@ -6,12 +6,16 @@ import com.my_web.community.community_demo.DAO.alpha_dao1;
 import com.my_web.community.community_demo.DAO.no_dao_test;
 import com.my_web.community.community_demo.alpha.Alpha;
 import com.my_web.community.community_demo.entity.User;
+import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.stereotype.Component;
 import org.springframework.test.context.ContextConfiguration;
 
 import java.text.SimpleDateFormat;
@@ -77,4 +81,6 @@ class CommunityDemoApplicationTests implements ApplicationContextAware {
 		Object obj = alpha.save2();
 		System.out.println(obj);
 	}
+
 }
+

@@ -30,9 +30,14 @@
         and entity_id = #{entityId}
     </select>
 
-    <insert id="insertComment" parameterType="Comment">
-        insert into comment(<include refid="insertField"/>
+    <insert id="insertComment" parameterType="Comment" keyProperty="id">
+        insert into comment(<include refid="insertField"/>)
         values(#{userId}, #{entityType}, #{entityId}, #{targetId}, #{content}, #{status}, #{createTime})
     </insert>
 
+    <select id="selectById" resultType="Comment">
+        select <include refid="selectField"/>
+        from comment
+        where id = #{id}
+    </select>
 </mapper>

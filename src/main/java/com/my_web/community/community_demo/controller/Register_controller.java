@@ -4,11 +4,15 @@ import com.google.code.kaptcha.Producer;
 import com.my_web.community.community_demo.entity.Activation_result;
 import com.my_web.community.community_demo.entity.User;
 import com.my_web.community.community_demo.service.User_service;
+import com.my_web.community.community_demo.util.CommunityUtil;
+import com.my_web.community.community_demo.util.CookieUtil;
+import com.my_web.community.community_demo.util.RedisKeyUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
@@ -24,6 +28,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 
 @Controller
@@ -36,6 +41,9 @@ public class Register_controller implements Activation_result {
 
     @Autowired
     User_service user_service;
+
+    @Autowired
+    CommunityUtil communityUtil;
 
     @RequestMapping(path = "/register", method = RequestMethod.GET)
     public String register_page() {
@@ -81,12 +89,26 @@ public class Register_controller implements Activation_result {
     @Autowired
     Producer kaptcha_producer;
 
+    @Autowired
+    RedisTemplate redisTemplate;
+
     //登录验证码
     @RequestMapping(path = "/kaptcha", method = RequestMethod.GET)
-    public void kaptcha_image(HttpServletResponse response, HttpSession session) {
+    public void kaptcha_image(HttpServletResponse response/*, HttpSession session*/) {
         String text = kaptcha_producer.createText();
         BufferedImage image = kaptcha_producer.createImage(text);
-        session.setAttribute("kaptcha", text);
+
+        //session.setAttribute("kaptcha", text);
+
+        String kaptchaOwner = communityUtil.createRandomId();
+        Cookie cookie = new Cookie("kaptchaOwner", kaptchaOwner);
+        cookie.setPath(context_path);
+        cookie.setMaxAge(60);
+        response.addCookie(cookie);
+
+        String redisKey = RedisKeyUtil.getKaptchaKey(kaptchaOwner);
+        redisTemplate.opsForValue().set(redisKey, text, 60, TimeUnit.SECONDS);
+
         response.setContentType("image/png");
         try {
             OutputStream outstream = response.getOutputStream();
@@ -97,11 +119,18 @@ public class Register_controller implements Activation_result {
     }
 
     @RequestMapping(path = "/login", method = RequestMethod.POST)
-    public String login(Model model, String username, String password, String code, boolean remember_me, HttpSession session, HttpServletResponse response) {
+    public String login(Model model, String username, String password, String code, boolean remember_me/*, HttpSession session*/,
+                        HttpServletResponse response, @CookieValue("kaptchaOwner") String kaptchaOwner) {
 
         //确认验证码
-        String kaptch = (String)session.getAttribute("kaptcha");
-        if (StringUtils.isBlank(code) || StringUtils.isBlank(kaptch) || !kaptch.equalsIgnoreCase(code)){
+        //String kaptch = (String)session.getAttribute("kaptcha");
+
+        String kaptcha = null;
+        if (StringUtils.isNotBlank(kaptchaOwner)) {
+            String redisKey = RedisKeyUtil.getKaptchaKey(kaptchaOwner);
+            kaptcha = (String)redisTemplate.opsForValue().get(redisKey);
+        }
+        if (StringUtils.isBlank(code) || StringUtils.isBlank(kaptcha) || !kaptcha.equalsIgnoreCase(code)){
             model.addAttribute("code_message", "验证码错误");
             return "/site/login";
         }

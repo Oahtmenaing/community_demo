@@ -4,6 +4,7 @@ import com.my_web.community.community_demo.entity.Login_ticket;
 import org.apache.ibatis.annotations.*;
 
 @Mapper
+@Deprecated
 public interface Login_ticket_Mapper {
 
     @Insert({"insert into login_ticket(user_id,ticket,status,expired) values(#{userId}, #{ticket}, #{status}, #{expired})"})
